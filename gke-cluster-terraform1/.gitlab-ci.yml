@@ -1,0 +1,29 @@
+stages:
+  - terraform
+
+variables:
+  TF_IN_AUTOMATION: "true"
+
+before_script:
+  - apt-get update && apt-get install -y unzip
+  - curl -s https://releases.hashicorp.com/terraform/1.0.0/terraform_1.0.0_linux_amd64.zip -o terraform.zip
+  - unzip terraform.zip
+  - mv terraform /usr/local/bin/
+
+terraform_init:
+  stage: terraform
+  script:
+    - terraform init
+
+terraform_plan:
+  stage: terraform
+  script:
+    - terraform plan
+  artifacts:
+    paths:
+      - plan.out
+
+terraform_apply:
+  stage: terraform
+  script:
+    - terraform apply -auto-approve
